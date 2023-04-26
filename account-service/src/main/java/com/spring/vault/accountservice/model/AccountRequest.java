@@ -10,5 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class AccountRequest {
-    private long amount;
+    private String name;
+    private long customerId;
+    private long balance;
+    private String accountType;
 }

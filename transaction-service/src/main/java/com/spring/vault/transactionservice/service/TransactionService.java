@@ -1,10 +1,11 @@
 package com.spring.vault.transactionservice.service;
 
-import com.spring.vault.transactionservice.model.TransactionRequest;
-import com.spring.vault.transactionservice.model.TransactionResponse;
+
+import com.spring.vault.transactionservice.external.request.AccountRequest;
+import com.spring.vault.transactionservice.model.RequestWrapper;
 
 public interface TransactionService {
-    TransactionResponse getTransactionById(long id);
-    long deposit(TransactionRequest transactionRequest);
-    long withdrawal(TransactionRequest transactionRequest);
+    void deposit(AccountRequest accountRequest, long amount);
+    void withdraw(AccountRequest accountRequest, long amount);
+    void transfer(RequestWrapper requestWrapper, long amount);
 }
