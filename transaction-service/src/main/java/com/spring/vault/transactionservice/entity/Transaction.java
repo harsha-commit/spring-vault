@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -28,4 +30,10 @@ public class Transaction {
 
     @Column(name = "STATUS")
     private String status;
+
+    @Column(name = "REASON_CODE")
+    private String reasonCode;
+
+    @Column(name = "CREATED_AT")
+    private Instant createdAt;
 }

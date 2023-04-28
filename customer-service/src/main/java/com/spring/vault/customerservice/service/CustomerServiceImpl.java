@@ -58,7 +58,7 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public void createCustomer(CustomerRequest customerRequest) {
+    public long createCustomer(CustomerRequest customerRequest) {
         log.info("Creating the Customer with given data");
         Customer customer = Customer.builder()
                 .firstName(customerRequest.getFirstName())
@@ -71,6 +71,7 @@ public class CustomerServiceImpl implements CustomerService{
                 .build();
         customerRepository.save(customer);
         log.info("Customer {} is CREATED", customer);
+        return customer.getId();
     }
 
     @Override

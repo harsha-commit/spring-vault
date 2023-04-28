@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService{
@@ -94,6 +95,18 @@ public class TransactionServiceImpl implements TransactionService{
                 .build();
 
         paymentRepository.save(payment2);
+    }
+
+    @Override
+    public List<Transaction> getTransactions() {
+        List<Transaction> transactions = transactionRepository.findAll();
+        return transactions;
+    }
+
+    @Override
+    public List<Payment> getPayments() {
+        List<Payment> payments = paymentRepository.findAll();
+        return payments;
     }
 }
 

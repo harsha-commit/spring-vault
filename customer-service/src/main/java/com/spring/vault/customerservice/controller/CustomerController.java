@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/customer")
+@CrossOrigin
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
@@ -33,9 +34,9 @@ public class CustomerController {
 
     // Create A Customer
     @PostMapping
-    public ResponseEntity<HttpStatus> createCustomer(@RequestBody CustomerRequest customerRequest){
-        customerService.createCustomer(customerRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<Long> createCustomer(@RequestBody CustomerRequest customerRequest){
+        long customerId = customerService.createCustomer(customerRequest);
+        return new ResponseEntity<>(customerId, HttpStatus.CREATED);
     }
 
     // Update A Customer (NOT FOR PAN CARD AND AADHAR CARD)
