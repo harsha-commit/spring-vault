@@ -1,5 +1,6 @@
 package com.bank.loan.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +16,8 @@ public interface LoanStatementRecordRepository extends JpaRepository<LoanStateme
 
 	List<LoanStatementEntity> findByLoanIdAndCustomerIdAndThisMonth(Integer loanId, Integer customerId, String month);
 
+	LoanStatementEntity findByLoanIdAndCustomerIdAndNextDueDate(Integer loanId, Integer customerId, LocalDate dueDate);
+
 	// LoanStatementEntity findByCustomerIdAndloanStmtId(Integer custId, Integer
 	// stmtId);
 
@@ -24,21 +27,11 @@ public interface LoanStatementRecordRepository extends JpaRepository<LoanStateme
 	@Query(value = "select l from LoanStatementEntity l WHERE l.customerId = ?1 and l.loanId = ?2 and l.closeAmount>0")
 	public LoanStatementEntity closeAmount(Integer customerId, Integer loanId);
 
-	@Query(value = "select l from LoanStatementEntity l WHERE l.customerId = ?1 and l.loanId = ?2 and l.closeAmount=null")
+	@Query(value = "select l from LoanStatementEntity l WHERE l.customerId = ?1 and l.loanId = ?2 and l.closeAmount=null and l.monthPaidAmount")
 	public List<LoanStatementEntity> clearStatement(Integer customerId, Integer loanId);
 
 	@Query(value = "select l.closeAmount from LoanStatementEntity l WHERE l.customerId = ?1 and l.loanId = ?2 and l.closeAmount>0")
 	public Double getCloseAmount(Integer customerId, Integer loanId);
 	// findByStartDateBetween();
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 }

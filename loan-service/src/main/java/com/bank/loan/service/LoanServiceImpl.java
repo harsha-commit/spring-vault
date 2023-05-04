@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.bank.loan.binding.Loan;
 import com.bank.loan.binding.LoanStatement;
+import com.bank.loan.binding.Payment;
 import com.bank.loan.entity.LoanEntity;
 import com.bank.loan.entity.LoanStatementEntity;
 import com.bank.loan.entity.LoanType;
@@ -72,6 +73,7 @@ public class LoanServiceImpl implements LoanService {
 		 */
 		// temprory logic
 		// if customer a/c older then 6 month then
+
 		if (loanEntity.getStatus().equalsIgnoreCase("NIL")) {
 			loanEntity.setStatus("approved");
 
@@ -106,12 +108,6 @@ public class LoanServiceImpl implements LoanService {
 		} else {
 			return "Loan already Verified";
 		}
-	}
-
-	public String everyMonthRepayment(Integer custId) {
-		List<LoanStatementEntity> findByCustomerId = loanStatementRecordRepo.findByCustomerId(custId);
-		return null;
-
 	}
 
 	public List<LoanStatement> repaymentStmt(Integer custId, Integer loanId) {
@@ -158,31 +154,34 @@ public class LoanServiceImpl implements LoanService {
 		}).collect(Collectors.toList());
 
 	}
-	public String monthlyRepayment() {
-		return null;
-	}
-	
 
-	public String doFullPayment() {
-		LoanStatementEntity closeAmountEn = loanStatementRecordRepo.closeAmount(4, 102);
+	public String monthlyRepayment(Payment payment) {
+		LocalDate dueDate = payment.getDueDate();
+		LoanStatementEntity loanStmtEntity = loanStatementRecordRepo.findByLoanIdAndCustomerIdAndNextDueDate(payment.getLoanId(), payment.getCustomerId(), payment.getDueDate());
+		Double monthPaidAmount = loanStmtEntity.getMonthPaidAmount();
+		if(monthPaidAmount == payment.getAmount()) {
+			loanStmtEntity.setMonthPaidAmount(monthPaidAmount-payment.getAmount());
+			loanStmtEntity.setPaidDate(LocalDate.now());
+			loanStmtEntity.setThisMonth(LocalDate.now().getMonth().toString());
+			loanStatementRecordRepo.save(loanStmtEntity);
+		}
+		return "Amount Paid";
+	}
+
+	public String doFullPayment(Payment payment) {
+
+		LoanStatementEntity closeAmountEn = loanStatementRecordRepo.closeAmount(payment.getCustomerId(),
+				payment.getLoanId());
 		Double closeAmount = closeAmountEn.getCloseAmount();
-		Double payAmount = 12640.0;
-		if (closeAmount.equals(payAmount)) {
+		Double payAmount = payment.getAmount();
+		if (closeAmount == payAmount) {
 			Double paidAmt = closeAmount - payAmount;
 			closeAmountEn.setCloseAmount(paidAmt);
 			closeAmountEn.setPaidDate(LocalDate.now());
 			loanStatementRecordRepo.save(closeAmountEn);
-			clearLoanStatment(4, 102);
+			clearLoanStatment(payment.getCustomerId(), payment.getLoanId());
 		}
-		System.out.println("===============" + payAmount);
 		return "Done";
-
-	}
-
-	private void clearLoanStatment(Integer custId, Integer loanId) {
-		List<LoanStatementEntity> clearStatement = loanStatementRecordRepo.clearStatement(custId, loanId);
-		System.out.println("----->>>>>>>>>>>>>>>>>>0000000000<<<<<<<<<<<<<<-----");
-		loanStatementRecordRepo.deleteAll(clearStatement);
 
 	}
 
@@ -198,6 +197,14 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	// ALL Private method
+
+	private void clearLoanStatment(Integer custId, Integer loanId) {
+		List<LoanStatementEntity> clearStatement = loanStatementRecordRepo.clearStatement(custId, loanId);
+		loanStatementRecordRepo.deleteAll(clearStatement);
+		log.info(" Statement has been reset");
+
+	}
+
 	private void statementGenerator(LoanEntity loanEntity) {
 
 		List<LoanStatementEntity> loanStmt = new ArrayList<>();
