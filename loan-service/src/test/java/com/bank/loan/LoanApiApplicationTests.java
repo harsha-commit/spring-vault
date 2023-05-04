@@ -1,10 +1,10 @@
-package com.spring.vault.loanservice;
+package com.bank.loan;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class LoanServiceApplicationTests {
+class LoanApiApplicationTests {
 
 	@Test
 	void contextLoads() {

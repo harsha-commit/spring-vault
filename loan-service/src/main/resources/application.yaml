@@ -1,0 +1,33 @@
+server:
+  port: 9901
+
+spring:
+  application:
+    name: LOAN-API
+#  config:
+#    import: //configserver:http://${CONFIG_SERVER_URL:localhost}:9296
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/bms
+    username:  murtazait
+    password: murtazait@110
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+
+  main:
+    allow-bean-definition-overriding: true
+#eureka:
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url:
+#      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}
+
+
+
+
+

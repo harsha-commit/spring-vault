@@ -1,13 +1,13 @@
-package com.spring.vault.loanservice;
+package com.bank.loan;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LoanServiceApplication {
+public class LoanApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(LoanServiceApplication.class, args);
+		SpringApplication.run(LoanApiApplication.class, args);
 	}
 
 }
