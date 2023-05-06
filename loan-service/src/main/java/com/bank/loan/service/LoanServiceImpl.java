@@ -155,12 +155,13 @@ public class LoanServiceImpl implements LoanService {
 
 	}
 
+	@Override
 	public String monthlyRepayment(Payment payment) {
-		LocalDate dueDate = payment.getDueDate();
-		LoanStatementEntity loanStmtEntity = loanStatementRecordRepo.findByLoanIdAndCustomerIdAndNextDueDate(payment.getLoanId(), payment.getCustomerId(), payment.getDueDate());
+		LoanStatementEntity loanStmtEntity = loanStatementRecordRepo.findByLoanIdAndCustomerIdAndNextDueDate(
+				payment.getLoanId(), payment.getCustomerId(), payment.getDueDate());
 		Double monthPaidAmount = loanStmtEntity.getMonthPaidAmount();
-		if(monthPaidAmount == payment.getAmount()) {
-			loanStmtEntity.setMonthPaidAmount(monthPaidAmount-payment.getAmount());
+		if (monthPaidAmount == payment.getAmount()) {
+			loanStmtEntity.setMonthPaidAmount(monthPaidAmount - payment.getAmount());
 			loanStmtEntity.setPaidDate(LocalDate.now());
 			loanStmtEntity.setThisMonth(LocalDate.now().getMonth().toString());
 			loanStatementRecordRepo.save(loanStmtEntity);
@@ -168,6 +169,7 @@ public class LoanServiceImpl implements LoanService {
 		return "Amount Paid";
 	}
 
+	@Override
 	public String doFullPayment(Payment payment) {
 
 		LoanStatementEntity closeAmountEn = loanStatementRecordRepo.closeAmount(payment.getCustomerId(),
@@ -179,7 +181,8 @@ public class LoanServiceImpl implements LoanService {
 			closeAmountEn.setCloseAmount(paidAmt);
 			closeAmountEn.setPaidDate(LocalDate.now());
 			loanStatementRecordRepo.save(closeAmountEn);
-			clearLoanStatment(payment.getCustomerId(), payment.getLoanId());
+			closeLoanAccount(payment.getCustomerId(), payment.getLoanId());
+
 		}
 		return "Done";
 
@@ -198,10 +201,16 @@ public class LoanServiceImpl implements LoanService {
 
 	// ALL Private method
 
-	private void clearLoanStatment(Integer custId, Integer loanId) {
+	private void closeLoanAccount(Integer custId, Integer loanId) {
 		List<LoanStatementEntity> clearStatement = loanStatementRecordRepo.clearStatement(custId, loanId);
 		loanStatementRecordRepo.deleteAll(clearStatement);
 		log.info(" Statement has been reset");
+
+		LoanEntity loan = loanRepository.findByLoanIdAndCustomerId(loanId, custId);
+		loan.setStatus("closed");
+		loan.setStatusDate(LocalDate.now());
+		loanRepository.save(loan);
+		log.info("Loan Account has been closed for Customer {} of Loan Id {}", loan.getCustomerId(), loanId);
 
 	}
 

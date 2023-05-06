@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Payment {
 
+	private Integer loanStmtId;
 	private Integer customerId;
 	private Integer loanId;
 	private Double amount;

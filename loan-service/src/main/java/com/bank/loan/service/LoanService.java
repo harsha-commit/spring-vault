@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.bank.loan.binding.Loan;
 import com.bank.loan.binding.LoanStatement;
+import com.bank.loan.binding.Payment;
 
 public interface LoanService {
 
@@ -18,6 +19,10 @@ public interface LoanService {
 	public List<Loan> viewLoan(Integer custId);
 
 	public List<LoanStatement> repaymentStmt(Integer custId, Integer loanId);
+	
+	public String monthlyRepayment(Payment payment);
+	
+	public String doFullPayment(Payment payment);
 	
 	public String loanVarification(Integer custId, Integer loanId);
 	
