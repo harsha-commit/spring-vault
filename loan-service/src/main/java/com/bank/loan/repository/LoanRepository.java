@@ -15,4 +15,5 @@ public interface LoanRepository extends JpaRepository<LoanEntity, Integer> {// C
 	// LoanEntity findByLoanIdAndCustomerId();
 	//LoanEntity findByLoanIdAndCustomerId(Integer loanId, Integer b);
 	List<LoanEntity> findByCustomerId(Integer custId);
+	
 }

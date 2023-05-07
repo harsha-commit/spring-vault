@@ -25,7 +25,7 @@ public class LoanController {
 	@Autowired
 	LoanService loanService;
 
-	// dropdown
+	// dropdown 
 	public ResponseEntity<Map<Integer, String>> dropDownLoanType() {
 		return new ResponseEntity<Map<Integer, String>>(loanService.dropDownLoanType(), HttpStatus.OK);
 	}
@@ -48,23 +48,29 @@ public class LoanController {
 		return new ResponseEntity<>(loanService.viewLoan(custId), HttpStatus.OK);
 	}
 
-	@PutMapping("/dofullpayment")
+	@PutMapping("/doFullpayment")
 	public ResponseEntity<?> doFullPayment(@RequestBody Payment payment) {
 
 		return new ResponseEntity<>(loanService.doFullPayment(payment), HttpStatus.OK);
 	}
 
-	@PutMapping("/dofullpayment")
+	@PutMapping("/doMonthlypayment")
 	public ResponseEntity<?> doMonthlyPayment(@RequestBody Payment payment) {
 
 		return new ResponseEntity<>(loanService.monthlyRepayment(payment), HttpStatus.OK);
 
 	}
 
-	@GetMapping("/statement/{custId}/{LoanId}")
+	@GetMapping("/statement/{custId}/{loanId}")
 	public ResponseEntity<?> getUpdatedStatement(@PathVariable Integer custId, @PathVariable Integer loanId) {
 
 		return new ResponseEntity<>(loanService.repaymentStmt(custId, loanId), HttpStatus.OK);
+
+	}
+	@GetMapping("/close/{custId}/{loanId}")
+	public ResponseEntity<?> closeAmount(@PathVariable Integer custId, @PathVariable Integer loanId) {
+
+		return new ResponseEntity<>(loanService.closeAmount(custId, loanId), HttpStatus.OK);
 
 	}
 }

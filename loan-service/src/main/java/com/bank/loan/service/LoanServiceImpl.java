@@ -160,11 +160,22 @@ public class LoanServiceImpl implements LoanService {
 		LoanStatementEntity loanStmtEntity = loanStatementRecordRepo.findByLoanIdAndCustomerIdAndNextDueDate(
 				payment.getLoanId(), payment.getCustomerId(), payment.getDueDate());
 		Double monthPaidAmount = loanStmtEntity.getMonthPaidAmount();
-		if (monthPaidAmount == payment.getAmount()) {
+		log.info("==================={}", loanStmtEntity);
+		log.info("===== monthPaidAmount {}", monthPaidAmount.hashCode());
+		log.info("===== sent amount {}", payment.getAmount().hashCode());
+
+		if (monthPaidAmount.equals(payment.getAmount())) {
+			log.info("========== INSIDE ==========");
 			loanStmtEntity.setMonthPaidAmount(monthPaidAmount - payment.getAmount());
 			loanStmtEntity.setPaidDate(LocalDate.now());
 			loanStmtEntity.setThisMonth(LocalDate.now().getMonth().toString());
 			loanStatementRecordRepo.save(loanStmtEntity);
+			LoanStatementEntity closeAmountEnt = loanStatementRecordRepo.closeAmount(payment.getLoanId(),
+					payment.getCustomerId());
+			Double closeAmount = closeAmountEnt.getCloseAmount();
+			closeAmount -= payment.getAmount();
+			closeAmountEnt.setCloseAmount(closeAmount);
+			loanStatementRecordRepo.save(closeAmountEnt);
 		}
 		return "Amount Paid";
 	}
@@ -176,7 +187,7 @@ public class LoanServiceImpl implements LoanService {
 				payment.getLoanId());
 		Double closeAmount = closeAmountEn.getCloseAmount();
 		Double payAmount = payment.getAmount();
-		if (closeAmount == payAmount) {
+		if (closeAmount.equals(payAmount)) {
 			Double paidAmt = closeAmount - payAmount;
 			closeAmountEn.setCloseAmount(paidAmt);
 			closeAmountEn.setPaidDate(LocalDate.now());
@@ -203,6 +214,7 @@ public class LoanServiceImpl implements LoanService {
 
 	private void closeLoanAccount(Integer custId, Integer loanId) {
 		List<LoanStatementEntity> clearStatement = loanStatementRecordRepo.clearStatement(custId, loanId);
+		log.info("{}" + clearStatement);
 		loanStatementRecordRepo.deleteAll(clearStatement);
 		log.info(" Statement has been reset");
 
@@ -259,6 +271,11 @@ public class LoanServiceImpl implements LoanService {
 			loanStmt.add(record);
 		}
 		loanStatementRecordRepo.saveAll(loanStmt);
+	}
+
+	@Override
+	public Double closeAmount(Integer custId, Integer loanId) {
+		return loanStatementRecordRepo.closeAmount(custId, loanId).getCloseAmount();
 	}
 
 }

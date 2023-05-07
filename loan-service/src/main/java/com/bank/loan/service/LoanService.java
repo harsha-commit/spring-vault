@@ -25,6 +25,8 @@ public interface LoanService {
 	public String doFullPayment(Payment payment);
 	
 	public String loanVarification(Integer custId, Integer loanId);
+
+	public Double closeAmount(Integer custId, Integer loanId);
 	
 	
 }

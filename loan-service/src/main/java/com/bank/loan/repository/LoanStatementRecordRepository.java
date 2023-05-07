@@ -27,7 +27,7 @@ public interface LoanStatementRecordRepository extends JpaRepository<LoanStateme
 	@Query(value = "select l from LoanStatementEntity l WHERE l.customerId = ?1 and l.loanId = ?2 and l.closeAmount>0")
 	public LoanStatementEntity closeAmount(Integer customerId, Integer loanId);
 
-	@Query(value = "select l from LoanStatementEntity l WHERE l.customerId = ?1 and l.loanId = ?2 and l.closeAmount=null and l.monthPaidAmount")
+	@Query(value = "select l from LoanStatementEntity l WHERE l.customerId = ?1 and l.loanId = ?2 and l.closeAmount=null and l.paidDate=null")
 	public List<LoanStatementEntity> clearStatement(Integer customerId, Integer loanId);
 
 	@Query(value = "select l.closeAmount from LoanStatementEntity l WHERE l.customerId = ?1 and l.loanId = ?2 and l.closeAmount>0")
