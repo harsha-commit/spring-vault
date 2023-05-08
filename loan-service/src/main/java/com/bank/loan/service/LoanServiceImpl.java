@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.bank.loan.binding.Loan;
@@ -19,6 +21,9 @@ import com.bank.loan.binding.Payment;
 import com.bank.loan.entity.LoanEntity;
 import com.bank.loan.entity.LoanStatementEntity;
 import com.bank.loan.entity.LoanType;
+import com.bank.loan.exception.LoanException;
+import com.bank.loan.externalclient.response.AccountResponse;
+import com.bank.loan.externalclient.service.AccountClient;
 import com.bank.loan.repository.LoanRepository;
 import com.bank.loan.repository.LoanStatementRecordRepository;
 import com.bank.loan.repository.LoanTypeRepository;
@@ -35,6 +40,8 @@ public class LoanServiceImpl implements LoanService {
 	LoanTypeRepository loanTypeRepository;
 	@Autowired
 	LoanStatementRecordRepository loanStatementRecordRepo;
+	@Autowired
+	AccountClient accountClient;
 
 	// dropList for Loan Type
 	@Override
@@ -49,13 +56,25 @@ public class LoanServiceImpl implements LoanService {
 	// customer apply loan to call LoanApply()
 	@Override
 	public String loanApply(Loan loanRequest) {
-		LoanEntity save = loanRepository.save(LoanEntity.builder().customerId(loanRequest.getCustomerId())
-				.loanAmount(loanRequest.getLoanAmount()).loanTypeId(loanRequest.getLoanTypeId())
-				.duration(loanRequest.getDuration()).status("NIL").appliedOn(LocalDate.now()).build());
-		if (save.getLoanId() > 0) {
-			return "Applied Successful, you will be notify once verification will be done";
+		ResponseEntity<AccountResponse> account = accountClient.getAccountById(loanRequest.getCustomerId());
+		long customerId = account.getBody().getCustomerId();
+
+		if (0 != customerId) {
+			LoanEntity save = loanRepository.save(LoanEntity.builder().customerId(loanRequest.getCustomerId())
+					.loanAmount(loanRequest.getLoanAmount()).loanTypeId(loanRequest.getLoanTypeId())
+					.duration(loanRequest.getDuration()).status("NIL").appliedOn(LocalDate.now()).build());
+			if (save.getLoanId() > 0) {
+				return "Applied Successful, you will be notify once verification will be done";
+			} else {
+				return "Internal Issue Please come in sometime";
+			}
+		} else {
+			log.info("ELSE {}" );
+			throw new LoanException("Record not found","RECORD_NOT_FOUND",
+					account.getStatusCode().value());
+
 		}
-		return "Failed to applied";
+
 	}
 
 	// Loan Worker only can validate whether Customer approved Loan or not.
