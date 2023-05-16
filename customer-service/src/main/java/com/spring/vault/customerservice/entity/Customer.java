@@ -47,4 +47,7 @@ public class Customer {
 
     @Column(name = "ADDRESS")
     private String address;
+
+    @Column(name = "PASSWORD")
+    private String password;
 }

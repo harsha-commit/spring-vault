@@ -11,4 +11,5 @@ public interface CustomerService {
     long createCustomer(CustomerRequest customerRequest);
     void deleteCustomerById(long id);
     void updateCustomer(CustomerRequest customerRequest);
+    CustomerResponse customerExists(long customerId, String password);
 }

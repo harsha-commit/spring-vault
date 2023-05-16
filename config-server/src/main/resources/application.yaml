@@ -1,0 +1,12 @@
+server:
+  port: 9296
+
+spring:
+  application:
+    name: CONFIG-SERVER
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/harsha-commit/spring-vault-config.git   # Git repository URI
+          clone-on-start: true

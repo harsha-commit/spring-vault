@@ -3,7 +3,6 @@ package com.spring.vault.customerservice.controller;
 import com.spring.vault.customerservice.model.CustomerRequest;
 import com.spring.vault.customerservice.model.CustomerResponse;
 import com.spring.vault.customerservice.service.CustomerService;
-import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,11 +31,17 @@ public class CustomerController {
         return new ResponseEntity<>(customerResponses, HttpStatus.OK);
     }
 
+    // Log In User
+    @GetMapping("/{customerId}/{password}")
+    public ResponseEntity<CustomerResponse> customerExists(@PathVariable long customerId, @PathVariable String password){
+        return new ResponseEntity<>(customerService.customerExists(customerId, password), HttpStatus.OK);
+    }
+
     // Create A Customer
     @PostMapping
     public ResponseEntity<Long> createCustomer(@RequestBody CustomerRequest customerRequest){
         long customerId = customerService.createCustomer(customerRequest);
-        return new ResponseEntity<>(customerId, HttpStatus.CREATED);
+        return new ResponseEntity<>(customerId, HttpStatus.OK);
     }
 
     // Update A Customer (NOT FOR PAN CARD AND AADHAR CARD)

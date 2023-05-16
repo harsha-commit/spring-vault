@@ -17,7 +17,6 @@ public class AccountServiceImpl implements AccountService{
 
     @Autowired
     private AccountRepository accountRepository;
-
     @Override
     public AccountResponse getAccountById(long id) {
         log.info("Finding an Account with ID: {}", id);
@@ -62,8 +61,8 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public void updateAccount(AccountRequest accountRequest) {
-        Account account = accountRepository.findByCustomerId(accountRequest.getCustomerId()).get();
+    public void updateAccount(AccountRequest accountRequest, long id) {
+        Account account = accountRepository.findById(id).get();
         account.setBalance(accountRequest.getBalance());
         account.setAccountType(accountRequest.getAccountType());
         accountRepository.save(account);
@@ -72,6 +71,41 @@ public class AccountServiceImpl implements AccountService{
     @Override
     public void deleteAccountById(long id) {
         accountRepository.deleteById(id);
+    }
+
+    @Override
+    public List<AccountResponse> getAllAccountsById(long id) {
+        List<Account> accounts = accountRepository.findAllByCustomerId(id);
+        List<AccountResponse> accountResponses = new ArrayList<>();
+        for(Account account: accounts){
+            accountResponses.add(AccountResponse.builder()
+                    .id(account.getId())
+                    .accountType(account.getAccountType())
+                    .name(account.getName())
+                    .balance(account.getBalance())
+                    .customerId(account.getCustomerId())
+                    .build());
+        }
+        return accountResponses;
+    }
+
+    @Override
+    public void addAmount(long accountId, long amount) {
+        Account account = accountRepository.findById(accountId).get();
+        account.setBalance(account.getBalance() + amount);
+        accountRepository.save(account);
+    }
+
+    @Override
+    public void subtractAmount(long accountId, long amount) {
+        Account account = accountRepository.findById(accountId).get();
+        account.setBalance(account.getBalance() - amount);
+        accountRepository.save(account);
+    }
+
+    @Override
+    public List<String> getAccountNamesById(long id) {
+        return null;
     }
 
 }

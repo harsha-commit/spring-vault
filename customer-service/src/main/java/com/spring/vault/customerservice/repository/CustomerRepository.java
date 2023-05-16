@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Optional<Customer> findByPanNumber(String panNumber);
+    Optional<Customer> findByIdAndPassword(Long customerId, String password);
 }

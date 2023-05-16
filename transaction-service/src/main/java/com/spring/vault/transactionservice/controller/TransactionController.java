@@ -4,7 +4,10 @@ import com.spring.vault.transactionservice.entity.Payment;
 import com.spring.vault.transactionservice.entity.Transaction;
 import com.spring.vault.transactionservice.external.request.AccountRequest;
 import com.spring.vault.transactionservice.model.RequestWrapper;
+import com.spring.vault.transactionservice.model.TransferObject;
 import com.spring.vault.transactionservice.service.TransactionService;
+import jakarta.ws.rs.Path;
+import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,42 +19,37 @@ import java.util.List;
 @RequestMapping("/transaction")
 @CrossOrigin
 public class TransactionController {
-
     @Autowired
     TransactionService transactionService;
 
-    // FOR TRANSACTIONS
-
-    @GetMapping
-    public ResponseEntity<List<Transaction>> getTransactions(){
-        return new ResponseEntity<>(transactionService.getTransactions(), HttpStatus.OK);
+    @GetMapping("/{id}")
+    // based on customer_id and account_name
+    public ResponseEntity<List<Transaction>> getTransactionsByCustomerIdAndAccountName(@PathVariable long id, @RequestParam String name){
+        return new ResponseEntity<>(transactionService.getTransactionsByCustomerIdAndAccountName(id, name), HttpStatus.OK);
     }
 
-    @GetMapping("/payment")
-    public ResponseEntity<List<Payment>> getPayments(){
-        return new ResponseEntity<>(transactionService.getPayments(), HttpStatus.OK);
+    @GetMapping("/payments/{id}")
+    public ResponseEntity<List<Payment>> getPaymentsBySourceId(@PathVariable long id){
+        return new ResponseEntity<>(transactionService.getPaymentsBySourceId(id), HttpStatus.OK);
     }
 
     // Deposit
-    @PostMapping("/deposit")
-    public ResponseEntity<HttpStatus> deposit(@RequestBody AccountRequest accountRequest, @RequestParam long amount){
-        transactionService.deposit(accountRequest, amount);
+    @PostMapping("/deposit/{accountId}")
+    public ResponseEntity<HttpStatus> deposit(@RequestBody AccountRequest accountRequest, @PathVariable long accountId,@RequestParam long amount){
+        transactionService.deposit(accountRequest, accountId, amount);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // Withdraw
-    @PostMapping("/withdraw")
-    public ResponseEntity<HttpStatus> withdraw(@RequestBody AccountRequest accountRequest, @RequestParam long amount){
-        transactionService.withdraw(accountRequest, amount);
+    @PostMapping("/withdraw/{accountId}")
+    public ResponseEntity<HttpStatus> withdraw(@RequestBody AccountRequest accountRequest, @PathVariable long accountId,@RequestParam long amount){
+        transactionService.withdraw(accountRequest, accountId, amount);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // FOR PAYMENTS
-    // source to destination
-    @PostMapping("/transfer")
-    public ResponseEntity<HttpStatus> transfer(@RequestBody RequestWrapper requestWrapper, @RequestParam long amount){
-        transactionService.transfer(requestWrapper, amount);
+    @PostMapping("/transfer/{amount}")
+    public ResponseEntity<HttpStatus> transfer(@RequestBody TransferObject transferObject, @PathVariable long amount){
+        transactionService.transfer(transferObject, amount);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

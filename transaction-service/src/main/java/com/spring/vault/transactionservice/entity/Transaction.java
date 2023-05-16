@@ -19,6 +19,9 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Column(name = "CUSTOMER_ID")
+    private long customerId;
+
     @Column(name = "ACCOUNT_NAME")
     private String accountName;
 

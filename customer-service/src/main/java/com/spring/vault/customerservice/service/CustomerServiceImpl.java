@@ -1,10 +1,14 @@
 package com.spring.vault.customerservice.service;
 
 import com.spring.vault.customerservice.entity.Customer;
+import com.spring.vault.customerservice.exception.CustomerNotFoundException;
+import com.spring.vault.customerservice.external.client.NotificationService;
 import com.spring.vault.customerservice.model.CustomerRequest;
 import com.spring.vault.customerservice.model.CustomerResponse;
+import com.spring.vault.customerservice.model.EmailRequest;
 import com.spring.vault.customerservice.repository.CustomerRepository;
 import lombok.extern.log4j.Log4j2;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +18,12 @@ import java.util.List;
 @Service
 @Log4j2
 public class CustomerServiceImpl implements CustomerService{
-
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private NotificationService notificationService;
 
     // EXCEPTIONS TO BE HANDLED
-
     @Override
     public CustomerResponse getCustomerById(long id) {
         log.info("Finding a Customer with ID: {}", id);
@@ -68,10 +72,18 @@ public class CustomerServiceImpl implements CustomerService{
                 .email(customerRequest.getEmail())
                 .phoneNumber(customerRequest.getPhoneNumber())
                 .address(customerRequest.getAddress())
+                .password(customerRequest.getPassword())
                 .build();
+
         customerRepository.save(customer);
         log.info("Customer {} is CREATED", customer);
+
+        String to = customerRequest.getEmail();
+        String text =  "Congratulations 🎉. \n Dear " + customerRequest.getFirstName() + "\n\n Thank you for creating an account with us! Your customer ID is " + customer.getId();
+        notificationService.sendEmail(new EmailRequest(to,"Spring Vault User Account CREATED 🔥", text));
+
         return customer.getId();
+
     }
 
     @Override
@@ -90,6 +102,23 @@ public class CustomerServiceImpl implements CustomerService{
         customer.setPhoneNumber(customerRequest.getPhoneNumber());
         customer.setAddress(customerRequest.getAddress());
         customerRepository.save(customer);
+    }
+
+    @Override
+    public CustomerResponse customerExists(long customerId, String password) {
+
+        Customer customer = customerRepository.findByIdAndPassword(customerId, password).orElseThrow(() -> new CustomerNotFoundException("Customer Not Found", "NOT_FOUND"));
+        CustomerResponse customerResponse = CustomerResponse.builder()
+                    .firstName(customer.getFirstName())
+                    .lastName(customer.getLastName())
+                    .panNumber(customer.getPanNumber())
+                    .aadharNumber(customer.getAadharNumber())
+                    .email(customer.getEmail())
+                    .phoneNumber(customer.getPhoneNumber())
+                    .address(customer.getAddress())
+                    .build();
+
+        return customerResponse;
     }
 
 }

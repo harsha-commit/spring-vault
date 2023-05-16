@@ -19,21 +19,27 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Column(name = "SOURCE_ID")
+    private long sourceId;
+
+    @Column(name = "ACCOUNT_ID")
+    private long  accountId;
+
     @Column(name = "ACCOUNT_NAME")
     private String accountName;
-
-    @Column(name = "ACCOUNT_NUMBER")
-    private String accountNumber;
 
     @Column(name = "AMOUNT")
     private long amount;
 
-    @Column(name = "STATUS")
-    private String status;
-
     @Column(name = "REFERENCE")
     private String reference;
 
+    @Column(name = "STATUS")
+    private String status;
+
+    @Column(name = "REASON_CODE")
+    private String reasonCode;
+
     @Column(name = "CREATED_AT")
-    private Instant date;
+    private Instant createdAt;
 }

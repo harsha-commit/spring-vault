@@ -18,5 +18,4 @@ public class TransactionServiceApplication {
 	public RestTemplate restTemplate(){
 		return new RestTemplate();
 	}
-
 }
