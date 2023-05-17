@@ -79,7 +79,7 @@ public class CustomerServiceImpl implements CustomerService{
         log.info("Customer {} is CREATED", customer);
 
         String to = customerRequest.getEmail();
-        String text =  "Congratulations 🎉. \n Dear " + customerRequest.getFirstName() + "\n\n Thank you for creating an account with us! Your customer ID is " + customer.getId();
+        String text =  " Congratulations 🎉. \n Dear " + customerRequest.getFirstName() + ",\n\n Thank you for creating an account with us! Your customer ID is " + customer.getId();
         notificationService.sendEmail(new EmailRequest(to,"Spring Vault User Account CREATED 🔥", text));
 
         return customer.getId();

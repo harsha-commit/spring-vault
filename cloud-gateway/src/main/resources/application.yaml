@@ -55,3 +55,12 @@ spring:
 #              args:
 #                name: TRANSACTION-SERVICE
 #                fallbackuri: forward:/transactionServiceFallBack
+
+
+okta:
+  oauth2:
+    issuer: https://dev-21987908.okta.com/oauth2/default
+    audience: api://default
+    client-id: 0oa9kxc13lNeKzRpP5d7
+    client-secret: 4ahtxCMwLfhX2tDFJq1hQhmP1PU2pZ_X1jhafOwD
+    scope: openid, profile, email, offline_access
