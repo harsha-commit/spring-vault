@@ -9,13 +9,13 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_HOST:localhost}:3306/bms
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/bms?useSSL=false
     username:  murtazait
     password: murtazait@110
   jpa:
     show-sql: true
     generate-ddl: true
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
 

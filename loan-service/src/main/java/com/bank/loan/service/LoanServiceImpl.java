@@ -23,7 +23,9 @@ import com.bank.loan.entity.LoanStatementEntity;
 import com.bank.loan.entity.LoanType;
 import com.bank.loan.exception.LoanException;
 import com.bank.loan.externalclient.response.AccountResponse;
+import com.bank.loan.externalclient.response.CustomerResponse;
 import com.bank.loan.externalclient.service.AccountClient;
+import com.bank.loan.externalclient.service.CustomerClient;
 import com.bank.loan.repository.LoanRepository;
 import com.bank.loan.repository.LoanStatementRecordRepository;
 import com.bank.loan.repository.LoanTypeRepository;
@@ -42,6 +44,8 @@ public class LoanServiceImpl implements LoanService {
 	LoanStatementRecordRepository loanStatementRecordRepo;
 	@Autowired
 	AccountClient accountClient;
+	@Autowired
+	CustomerClient customerClient;
 
 	// dropList for Loan Type
 	@Override
@@ -56,10 +60,12 @@ public class LoanServiceImpl implements LoanService {
 	// customer apply loan to call LoanApply()
 	@Override
 	public String loanApply(Loan loanRequest) {
-		ResponseEntity<AccountResponse> account = accountClient.getAccountById(loanRequest.getCustomerId());
-		long customerId = account.getBody().getCustomerId();
-
-		if (0 != customerId) {
+		ResponseEntity<CustomerResponse> customer = customerClient.getCustomerById(loanRequest.getCustomerId());
+		CustomerResponse body = customer.getBody();
+		String aadharNumber = body.getAadharNumber();
+		String panNumber = body.getPanNumber();
+		
+		if (null != panNumber && null != aadharNumber) {
 			LoanEntity save = loanRepository.save(LoanEntity.builder().customerId(loanRequest.getCustomerId())
 					.loanAmount(loanRequest.getLoanAmount()).loanTypeId(loanRequest.getLoanTypeId())
 					.duration(loanRequest.getDuration()).status("NIL").appliedOn(LocalDate.now()).build());
@@ -69,9 +75,8 @@ public class LoanServiceImpl implements LoanService {
 				return "Internal Issue Please come in sometime";
 			}
 		} else {
-			log.info("ELSE {}" );
-			throw new LoanException("Record not found","RECORD_NOT_FOUND",
-					account.getStatusCode().value());
+			log.info("ELSE {}");
+			throw new LoanException("Aadhar and Pan must be required! either or both are missing", "RECORD_NOT_FOUND", customer.getStatusCode().value());
 
 		}
 
@@ -82,20 +87,16 @@ public class LoanServiceImpl implements LoanService {
 	public String loanVarification(Integer customerId, Integer loanId) {
 		log.info("===============================>{} {}", customerId, loanId);
 		LoanEntity loanEntity = loanRepository.findByLoanIdAndCustomerId(loanId, customerId);
-
-		// Buissness Logic
+		log.info(loanEntity.toString());
 		/*
-		 * by customerId we can fetch customer detaail from Customer API through feign
-		 * client or RestTemplate, Then we can validate loan based on customer details
-		 * and update the status accordingly then call Mail Service to notifiying
-		 * customer
+		 * for validation above details must be provide while calling Government pan and
+		 * addhar apis where otp will send to customer register mobile number then
+		 * CUstomer has to give opt in otp field we again call Government APIS to verify
+		 * OTP Based on then we bank decide whether CUstomer eligible for LOAN or not.
 		 */
-		// temprory logic
-		// if customer a/c older then 6 month then
-
 		if (loanEntity.getStatus().equalsIgnoreCase("NIL")) {
 			loanEntity.setStatus("approved");
-
+			log.info("--- NIL, Approved");
 			LoanType loanType = loanTypeRepository.findById(loanEntity.getLoanTypeId()).get();
 
 			Double principal = loanEntity.getLoanAmount();

@@ -4,11 +4,23 @@ server:
 spring:
   application:
     name: NOTIFICATION-SERVICE
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/bms
+    username:  murtazait
+    password: murtazait@110
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
   mail:
     host: smtp.gmail.com
     port: 587
-    username: springvaultbank@gmail.com
-    password: xcgyxcrxhvjrgaed
+    username: murtazarizvi1100@gmail.com
+    password: cxatgavexeajlmox
     properties:
       mail:
         smtp:
@@ -28,3 +40,4 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}
+      
