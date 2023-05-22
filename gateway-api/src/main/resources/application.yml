@@ -1,0 +1,42 @@
+server:
+  port: 8888
+  
+spring:
+  application:
+    name: GATEWAY-API    
+    
+  cloud:
+    gateway:
+      routes:
+      - id: LOAN-API
+        uri: lb://LOAN-API 
+        predicates:
+        - Path=/loan/**
+        
+      - id: ACCOUNT-SERVICE
+        uri: lb://ACCOUNT-SERVICE 
+        predicates:
+        - Path=/account/**
+        
+      - id: CUSTOMER-SERVICE
+        uri: lb://CUSTOMER-SERVICE
+        predicates:
+        - Path=/customer/**
+        
+      - id: NOTIFICATION-SERVICE
+        uri: lb://NOTIFICATION-SERVICE
+        predicates:
+        - Path=/statement/**
+        
+      - id: TRANSACTION-SERVICE
+        uri: lb://TRANSACTION-SERVICE
+        predicates:
+        - Path=/transaction/**
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}
