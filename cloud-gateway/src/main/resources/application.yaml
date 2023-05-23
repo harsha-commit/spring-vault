@@ -6,8 +6,10 @@ spring:
   application:
     name: API-GATEWAY
   config:
-    import: configserver:http://localhost:9296
+    import: configserver:http://${CONFIG_SERVER_URL:localhost}:9296
   cloud:
+    discovery:
+      enabled: true
     gateway:
       globalcors:
         corsConfigurations:
@@ -64,3 +66,12 @@ okta:
     client-id: 0oa9kxc13lNeKzRpP5d7
     client-secret: 4ahtxCMwLfhX2tDFJq1hQhmP1PU2pZ_X1jhafOwD
     scope: openid, profile, email, offline_access
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}

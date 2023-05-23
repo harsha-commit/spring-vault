@@ -12,7 +12,7 @@ import java.util.List;
 public interface TransactionService {
     void deposit(AccountRequest accountRequest, long accountId, long amount);
     void withdraw(AccountRequest accountRequest, long accountId, long amount);
-    void transfer(TransferObject transferObject, long amount);
+    boolean transfer(TransferObject transferObject, long amount);
     List<Transaction> getTransactionsByCustomerIdAndAccountName(long id, String name);
     List<Payment> getPaymentsBySourceId(long id);
 }

@@ -48,8 +48,8 @@ public class TransactionController {
     }
 
     @PostMapping("/transfer/{amount}")
-    public ResponseEntity<HttpStatus> transfer(@RequestBody TransferObject transferObject, @PathVariable long amount){
-        transactionService.transfer(transferObject, amount);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Boolean> transfer(@RequestBody TransferObject transferObject, @PathVariable long amount){
+        boolean result = transactionService.transfer(transferObject, amount);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

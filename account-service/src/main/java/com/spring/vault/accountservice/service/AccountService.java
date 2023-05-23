@@ -14,5 +14,5 @@ public interface AccountService {
     List<AccountResponse> getAllAccountsById(long id);
     void addAmount(long accountId, long amount);
     void subtractAmount(long accountId, long amount);
-    List<String> getAccountNamesById(long id);
+    Boolean doesAccountExist(long id);
 }

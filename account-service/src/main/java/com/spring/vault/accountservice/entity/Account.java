@@ -1,6 +1,7 @@
 package com.spring.vault.accountservice.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.GeneratedValue;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

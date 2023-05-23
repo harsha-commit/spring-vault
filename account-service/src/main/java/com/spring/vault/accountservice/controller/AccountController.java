@@ -26,17 +26,17 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @GetMapping("/names/{id}")
-    public  ResponseEntity<List<String>> getAccountNamesById(@PathVariable long id){
-        List<String> accountNames = accountService.getAccountNamesById(id);
-        return new ResponseEntity<>(accountNames, HttpStatus.OK);
-    }
-
-    // Get Account By ID
+    // Get Account By Customer ID
     @GetMapping("/{id}")
     public ResponseEntity<AccountResponse> getAccountById(@PathVariable long id){
         AccountResponse accountResponse = accountService.getAccountById(id);
         return new ResponseEntity<>(accountResponse, HttpStatus.OK);
+    }
+
+    // Check if Account Exists
+    @GetMapping("/exists/{id}")
+    public ResponseEntity<Boolean> doesAccountExist(@PathVariable long id){
+        return new ResponseEntity<>(accountService.doesAccountExist(id), HttpStatus.OK);
     }
 
     // Get All Accounts

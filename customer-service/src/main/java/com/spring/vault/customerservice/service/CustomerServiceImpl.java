@@ -8,7 +8,6 @@ import com.spring.vault.customerservice.model.CustomerResponse;
 import com.spring.vault.customerservice.model.EmailRequest;
 import com.spring.vault.customerservice.repository.CustomerRepository;
 import lombok.extern.log4j.Log4j2;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,6 @@ public class CustomerServiceImpl implements CustomerService{
     @Autowired
     private NotificationService notificationService;
 
-    // EXCEPTIONS TO BE HANDLED
     @Override
     public CustomerResponse getCustomerById(long id) {
         log.info("Finding a Customer with ID: {}", id);
@@ -61,8 +59,30 @@ public class CustomerServiceImpl implements CustomerService{
         return customerResponses;
     }
 
+    // CustomerRequest =>
     @Override
     public long createCustomer(CustomerRequest customerRequest) {
+
+        // Check if email already exists
+        if (customerRepository.existsByEmail(customerRequest.getEmail())) {
+            return -1;
+        }
+
+        // Check if PAN number already exists
+        if (customerRepository.existsByPanNumber(customerRequest.getPanNumber())) {
+            return -2;
+        }
+
+        // Check if Aadhar number already exists
+        if (customerRepository.existsByAadharNumber(customerRequest.getAadharNumber())) {
+            return -3;
+        }
+
+        // Check if phone number already exists
+        if (customerRepository.existsByPhoneNumber(customerRequest.getPhoneNumber())) {
+            return -4;
+        }
+
         log.info("Creating the Customer with given data");
         Customer customer = Customer.builder()
                 .firstName(customerRequest.getFirstName())
@@ -83,7 +103,6 @@ public class CustomerServiceImpl implements CustomerService{
         notificationService.sendEmail(new EmailRequest(to,"Spring Vault User Account CREATED 🔥", text));
 
         return customer.getId();
-
     }
 
     @Override

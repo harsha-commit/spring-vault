@@ -14,7 +14,6 @@ import java.util.List;
 @Service
 @Log4j2
 public class AccountServiceImpl implements AccountService{
-
     @Autowired
     private AccountRepository accountRepository;
     @Override
@@ -104,8 +103,8 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public List<String> getAccountNamesById(long id) {
-        return null;
+    public Boolean doesAccountExist(long id) {
+        return accountRepository.existsById(id);
     }
 
 }
