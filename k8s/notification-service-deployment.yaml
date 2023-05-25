@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service-app
+spec:
+  selector:
+    matchLabels:
+      app: notification-service-app
+  template:
+    metadata:
+      labels:
+        app: notification-service-app
+    spec:
+      containers:
+        - name: notification-service-app
+          image: docksterharsha/notificationservice:0.0.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8083
+          env:
+            - name: EUREKA_SERVICE_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  key: eureka_service_address
+                  name: eureka-cm
+            - name: CONFIG_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: config_url
+                  name: config-cm
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service-svc
+spec:
+  selector:
+    app: notification-service-app
+  ports:
+    - port: 80
+      targetPort: 8083

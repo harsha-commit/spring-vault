@@ -1,4 +1,3 @@
-
 server:
   port: 9090
 
@@ -6,14 +5,14 @@ spring:
   application:
     name: API-GATEWAY
   config:
-    import: configserver:http://${CONFIG_SERVER_URL:localhost}:9296
+    import: configserver:${CONFIG_SERVER_URL:http://localhost:9296}
   cloud:
     discovery:
       enabled: true
     gateway:
       globalcors:
         corsConfigurations:
-          '[/**]':
+          "[/**]":
             allowedOrigins: "http://localhost:3000"
             allowedMethods:
               - GET
@@ -30,20 +29,10 @@ spring:
           uri: lb://ACCOUNT-SERVICE
           predicates:
             - Path=/account/**
-#          filters:
-#            - name: CircuitBreaker
-#              args:
-#                name: ACCOUNT-SERVICE
-#                fallbackuri: forward:/accountServiceFallBack
         - id: CUSTOMER-SERVICE
           uri: lb://CUSTOMER-SERVICE
           predicates:
             - Path=/customer/**
-#          filters:
-#            - name: CircuitBreaker
-#              args:
-#                name: CUSTOMER-SERVICE
-#                fallbackuri: forward:/customerServiceFallBack
         - id: NOTIFICATION-SERVICE
           uri: lb://NOTIFICATION-SERVICE
           predicates:
@@ -52,12 +41,6 @@ spring:
           uri: lb://TRANSACTION-SERVICE
           predicates:
             - Path=/transaction/**
-          filters:
-#            - name: CircuitBreaker
-#              args:
-#                name: TRANSACTION-SERVICE
-#                fallbackuri: forward:/transactionServiceFallBack
-
 
 okta:
   oauth2:
