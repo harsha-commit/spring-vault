@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-service-app
+spec:
+  selector:
+    matchLabels:
+      app: customer-service-app
+  template:
+    metadata:
+      labels:
+        app: customer-service-app
+    spec:
+      containers:
+        - name: customer-service-app
+          image: docksterharsha/customerservice:0.0.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          env:
+            - name: EUREKA_SERVICE_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  key: eureka_service_address
+                  name: eureka-cm
+            - name: CONFIG_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: config_url
+                  name: config-cm
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-cm
+                  key: hostname
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-service-svc
+spec:
+  selector:
+    app: customer-service-app
+  ports:
+    - port: 80
+      targetPort: 8081

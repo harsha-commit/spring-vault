@@ -1,0 +1,96 @@
+version: "3"
+services:
+  serviceregistry:
+    container_name: serviceregistry
+    image: "docksterharsha/serviceregistry:0.0.1"
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://serviceregistry:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  configserver:
+    container_name: configserver
+    image: "docksterharsha/configserver:0.0.1"
+    ports:
+      - "9296:9296"
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://serviceregistry:8761/eureka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://configserver:9296/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      serviceregistry:
+        condition: service_healthy
+
+  cloudgateway:
+    container_name: cloudgateway
+    image: "docksterharsha/cloudgateway:0.0.1"
+    ports:
+      - "9090:9090"
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://serviceregistry:8761/eureka
+      - CONFIG_SERVER_URL=http://configserver:9296
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://cloudgateway:9090/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      configserver:
+        condition: service_healthy
+
+  accountservice:
+    container_name: accountservice
+    image: "docksterharsha/accountservice:0.0.1"
+    ports:
+      - "8080:8080"
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://serviceregistry:8761/eureka
+      - CONFIG_SERVER_URL=http://configserver:9296
+      - DB_HOST=host.docker.internal
+    depends_on:
+      cloudgateway:
+        condition: service_healthy
+
+  notificationservice:
+    container_name: notificationservice
+    image: "docksterharsha/notificationservice:0.0.1"
+    ports:
+      - "8083:8083"
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://serviceregistry:8761/eureka
+      - CONFIG_SERVER_URL=http://configserver:9296
+    depends_on:
+      cloudgateway:
+        condition: service_healthy
+
+  customerservice:
+    container_name: customerservice
+    image: "docksterharsha/customerservice:0.0.1"
+    ports:
+      - "8081:8081"
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://serviceregistry:8761/eureka
+      - CONFIG_SERVER_URL=http://configserver:9296
+      - DB_HOST=host.docker.internal
+    depends_on:
+      cloudgateway:
+        condition: service_healthy
+
+  transactionservice:
+    container_name: transactionservice
+    image: "docksterharsha/transactionservice:0.0.1"
+    ports:
+      - "8082:8082"
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://serviceregistry:8761/eureka
+      - CONFIG_SERVER_URL=http://configserver:9296
+      - DB_HOST=host.docker.internal
+    depends_on:
+      cloudgateway:
+        condition: service_healthy
