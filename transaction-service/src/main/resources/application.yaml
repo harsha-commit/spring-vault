@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:3306/transaction_db
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/customer_db
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -12,6 +12,14 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  data:
+    mongodb:
+      authentication-database: admin
+      username: root
+      password: root
+      database: transaction_db
+      port: 27017
+      host: ${DB_HOST:localhost}
   application:
     name: TRANSACTION-SERVICE
   cloud:

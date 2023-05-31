@@ -20,3 +20,11 @@ metadata:
   name: mysql-cm
 data:
   hostname: "mysql-0.mysql"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongodb-cm
+data:
+  hostname: "mongodb"
