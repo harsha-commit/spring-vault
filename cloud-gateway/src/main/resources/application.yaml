@@ -44,10 +44,10 @@ spring:
 
 okta:
   oauth2:
-    issuer: https://dev-21987908.okta.com/oauth2/default
+    issuer: https://dev-90530851.okta.com/oauth2/default
     audience: api://default
-    client-id: 0oa9kxc13lNeKzRpP5d7
-    client-secret: 4ahtxCMwLfhX2tDFJq1hQhmP1PU2pZ_X1jhafOwD
+    client-id: 0oa9rt67l0cQQNQoE5d7
+    client-secret: 8FHtFpCFVF7PkgFuWvxRKlyBcf4Lxu0UfIlzBxCo
     scope: openid, profile, email, offline_access
 
 eureka:

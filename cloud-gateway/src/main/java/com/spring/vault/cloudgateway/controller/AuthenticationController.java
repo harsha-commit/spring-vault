@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/authenticate")
 public class AuthenticationController {
-
     @GetMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(
             @AuthenticationPrincipal OidcUser oidcUser,
