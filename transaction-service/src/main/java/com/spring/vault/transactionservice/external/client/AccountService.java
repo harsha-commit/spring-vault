@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "ACCOUNT-SERVICE/account")
+@FeignClient(name = "account", url="http://account-service-svc/account")
 public interface AccountService {
     @GetMapping("/add/{accountId}")
     public ResponseEntity<HttpStatus> addAmount(@PathVariable long accountId, @RequestParam long amount);

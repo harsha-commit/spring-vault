@@ -2,7 +2,7 @@ version: "3"
 services:
   serviceregistry:
     container_name: serviceregistry
-    image: "docksterharsha/serviceregistry:0.0.1"
+    image: "docksterharsha/serviceregistry:0.0.3"
     ports:
       - "8761:8761"
     healthcheck:
@@ -13,7 +13,7 @@ services:
 
   configserver:
     container_name: configserver
-    image: "docksterharsha/configserver:0.0.1"
+    image: "docksterharsha/configserver:0.0.3"
     ports:
       - "9296:9296"
     environment:
@@ -29,7 +29,7 @@ services:
 
   cloudgateway:
     container_name: cloudgateway
-    image: "docksterharsha/cloudgateway:0.0.1"
+    image: "docksterharsha/cloudgateway:0.0.3"
     ports:
       - "9090:9090"
     environment:
@@ -46,7 +46,7 @@ services:
 
   accountservice:
     container_name: accountservice
-    image: "docksterharsha/accountservice:0.0.1"
+    image: "docksterharsha/accountservice:0.0.3"
     ports:
       - "8080:8080"
     environment:
@@ -59,7 +59,7 @@ services:
 
   notificationservice:
     container_name: notificationservice
-    image: "docksterharsha/notificationservice:0.0.1"
+    image: "docksterharsha/notificationservice:0.0.3"
     ports:
       - "8083:8083"
     environment:
@@ -71,7 +71,7 @@ services:
 
   customerservice:
     container_name: customerservice
-    image: "docksterharsha/customerservice:0.0.1"
+    image: "docksterharsha/customerservice:0.0.3"
     ports:
       - "8081:8081"
     environment:
@@ -84,7 +84,7 @@ services:
 
   transactionservice:
     container_name: transactionservice
-    image: "docksterharsha/transactionservice:0.0.2"
+    image: "docksterharsha/transactionservice:0.0.3"
     ports:
       - "8082:8082"
     environment:

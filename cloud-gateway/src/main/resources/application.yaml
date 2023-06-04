@@ -26,19 +26,19 @@ spring:
               - Authorization
       routes:
         - id: ACCOUNT-SERVICE
-          uri: lb://ACCOUNT-SERVICE
+          uri: http://account-service-svc
           predicates:
             - Path=/account/**
         - id: CUSTOMER-SERVICE
-          uri: lb://CUSTOMER-SERVICE
+          uri: http://customer-service-svc
           predicates:
             - Path=/customer/**
         - id: NOTIFICATION-SERVICE
-          uri: lb://NOTIFICATION-SERVICE
+          uri: http://notification-service-svc
           predicates:
             - Path=/notification/**
         - id: TRANSACTION-SERVICE
-          uri: lb://TRANSACTION-SERVICE
+          uri: http://transaction-service-svc
           predicates:
             - Path=/transaction/**
 
@@ -50,11 +50,4 @@ okta:
     client-secret: 8FHtFpCFVF7PkgFuWvxRKlyBcf4Lxu0UfIlzBxCo
     scope: openid, profile, email, offline_access
 
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    fetch-registry: true
-    register-with-eureka: true
-    service-url:
-      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}
+

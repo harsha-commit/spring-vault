@@ -1,23 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: customer-service-app
+  name: account-service-app
 spec:
   selector:
     matchLabels:
-      app: customer-service-app
+      app: account-service-app
   template:
     metadata:
       labels:
-        app: customer-service-app
+        app: account-service-app
     spec:
       containers:
-        - name: customer-service-app
-          image: docksterharsha/customerservice:0.0.1
+        - name: account-service-app
+          image: docksterharsha/accountservice:0.0.1
           imagePullPolicy: Always
           ports:
-            - containerPort: 8081
+            - containerPort: 8080
           env:
+            - name: EUREKA_SERVICE_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  key: eureka_service_address
+                  name: eureka-cm
             - name: CONFIG_SERVER_URL
               valueFrom:
                 configMapKeyRef:
@@ -33,10 +38,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: customer-service-svc
+  name: account-service-svc
 spec:
   selector:
-    app: customer-service-app
+    app: account-service-app
   ports:
     - port: 80
-      targetPort: 8081
+      targetPort: 8080
