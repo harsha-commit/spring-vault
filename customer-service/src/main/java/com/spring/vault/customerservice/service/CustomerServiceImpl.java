@@ -40,23 +40,10 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public List<CustomerResponse> getAllCustomers() {
+    public List<Customer> getAllCustomers() {
         log.info("Getting all Customers");
         List<Customer> customers = customerRepository.findAll();
-        List<CustomerResponse> customerResponses = new ArrayList<>();
-        for(Customer c: customers){
-            // Creating and Adding Customer Responses from Customers
-            customerResponses.add(CustomerResponse.builder()
-                    .firstName(c.getFirstName())
-                    .lastName(c.getLastName())
-                    .panNumber(c.getPanNumber())
-                    .aadharNumber(c.getAadharNumber())
-                    .email(c.getEmail())
-                    .phoneNumber(c.getPhoneNumber())
-                    .address(c.getAddress())
-                    .build());
-        }
-        return customerResponses;
+        return customers;
     }
 
     // CustomerRequest =>

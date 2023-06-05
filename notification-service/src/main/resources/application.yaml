@@ -35,4 +35,9 @@ spring:
         provider:
           okta:
             issuer-uri: https://dev-90530851.okta.com/oauth2/default
+sendgrid:
+  api:
+    key: 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
 
+sender:
+  email: springvaultbank@gmail.com

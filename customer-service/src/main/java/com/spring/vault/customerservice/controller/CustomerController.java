@@ -1,5 +1,6 @@
 package com.spring.vault.customerservice.controller;
 
+import com.spring.vault.customerservice.entity.Customer;
 import com.spring.vault.customerservice.model.CustomerRequest;
 import com.spring.vault.customerservice.model.CustomerResponse;
 import com.spring.vault.customerservice.service.CustomerService;
@@ -26,8 +27,8 @@ public class CustomerController {
 
     // Get All Customers
     @GetMapping
-    public ResponseEntity<List<CustomerResponse>> getAllCustomers(){
-        List<CustomerResponse> customerResponses = customerService.getAllCustomers();
+    public ResponseEntity<List<Customer>> getAllCustomers(){
+        List<Customer> customerResponses = customerService.getAllCustomers();
         return new ResponseEntity<>(customerResponses, HttpStatus.OK);
     }
 
