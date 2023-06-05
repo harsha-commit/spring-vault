@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: transaction-service-app
-          image: docksterharsha/transactionservice:0.0.2
+          image: docksterharsha/transactionservice:0.0.1
           imagePullPolicy: Always
           ports:
             - containerPort: 8082
